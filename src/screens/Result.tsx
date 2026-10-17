@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { encodeRun } from '../game/codec';
-import { ERROR_PENALTY_MS, roundScore, totalErrors, totalScore } from '../game/engine';
+import { ERROR_PENALTY_MS, TIMEOUT_PENALTY_MS, roundScore, totalErrors, totalScore } from '../game/engine';
 import type { Run } from '../game/types';
 import { fmt } from '../format';
 import { challengeUrl, shareText } from '../services/share';
@@ -18,6 +18,12 @@ export default function Result({ run, ghost, daily, onReplay, onAgain, onHome }:
   const [note, setNote] = useState('');
   const total = totalScore(run.rounds);
   const errors = totalErrors(run.rounds);
+  const timeouts = run.rounds.filter((r) => !r.completed).length;
+  const summary = [
+    errors > 0 && `${errors} ${errors === 1 ? 'erro' : 'erros'} (+${(errors * ERROR_PENALTY_MS) / 1000}s)`,
+    timeouts > 0 &&
+      `${timeouts} ${timeouts === 1 ? 'percurso esgotado' : 'percursos esgotados'} (+${(timeouts * TIMEOUT_PENALTY_MS) / 1000}s)`,
+  ].filter(Boolean);
   const ghostTotal = ghost ? totalScore(ghost.rounds) : 0;
   const diff = ghost ? ghostTotal - total : 0;
 
@@ -39,7 +45,7 @@ export default function Result({ run, ghost, daily, onReplay, onAgain, onHome }:
       <h2 className="neon-title small">{ghost ? (diff >= 0 ? 'Vitória!' : 'Quase!') : daily ? 'Desafio do dia' : 'Fim da partida'}</h2>
       <div className="big-time">{fmt(total)}</div>
       <p className="sub">
-        {errors === 0 ? 'Sem erros — rastro perfeito ✨' : `${errors} ${errors === 1 ? 'erro' : 'erros'} (+${(errors * ERROR_PENALTY_MS) / 1000}s)`}
+        {summary.length === 0 ? 'Sem erros — rastro perfeito ✨' : summary.join(' · ')}
       </p>
 
       {ghost && (
