@@ -5,6 +5,8 @@ import type { Run } from './game/types';
 import { getName, setName } from './services/profile';
 import { ranking } from './services/ranking';
 import { sfx } from './services/feedback';
+import { ads, countMatch } from './services/ads';
+import Interstitial from './components/Interstitial';
 import Home from './screens/Home';
 import Play from './screens/Play';
 import Result from './screens/Result';
@@ -12,7 +14,7 @@ import Replay from './screens/Replay';
 import Ranking from './screens/Ranking';
 import HowTo from './screens/HowTo';
 
-type Screen = 'home' | 'howto' | 'play' | 'result' | 'replay' | 'ranking';
+type Screen = 'home' | 'howto' | 'play' | 'ad' | 'result' | 'replay' | 'ranking';
 
 interface Game {
   seed: number;
@@ -46,6 +48,10 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    void ads.init();
+  }, []);
+
+  useEffect(() => {
     const run = challengeFromUrl();
     if (run) receiveChallenge(run);
   }, [receiveChallenge]);
@@ -62,8 +68,14 @@ export default function App() {
     (run: Run) => {
       void ranking.submit(run, true);
       setLastRun(run);
-      setScreen('result');
       if (game?.ghost && challenge === game.ghost) setChallenge(null);
+      if (!countMatch()) {
+        setScreen('result');
+      } else if (ads.native) {
+        void ads.showInterstitial().finally(() => setScreen('result'));
+      } else {
+        setScreen('ad');
+      }
     },
     [game, challenge],
   );
@@ -98,6 +110,7 @@ export default function App() {
           onQuit={() => setScreen('home')}
         />
       )}
+      {screen === 'ad' && <Interstitial onClose={() => setScreen('result')} />}
       {screen === 'result' && lastRun && game && (
         <Result
           run={lastRun}

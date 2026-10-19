@@ -34,6 +34,15 @@ O arquivo `amplify.yml` já está pronto (build com `npm ci && npm run build`, p
 4. Quando terminar, abra o link `https://main.xxxx.amplifyapp.com` no celular.
 5. (Opcional) Em **Hosting → Environment variables**, crie `VITE_PUBLIC_URL` com esse link e faça **Redeploy** — assim os links de desafio compartilhados pelo app nativo apontam para o site.
 
+## Anúncios (tela cheia a cada 3 partidas)
+
+Depois de cada 3ª partida concluída (3, 6, 9…) aparece um anúncio de tela cheia antes do resultado (`src/services/ads.ts`).
+
+- **App Android/iPhone:** usa o Google AdMob (`@capacitor-community/admob`). Hoje está com os **IDs de teste do Google**. Para anúncios reais, crie o app no [AdMob](https://admob.google.com) e troque:
+  - o *App ID* em `android/app/src/main/AndroidManifest.xml` e `ios/App/App/Info.plist` (`GADApplicationIdentifier`);
+  - o bloco intersticial nas variáveis `VITE_ADMOB_INTERSTITIAL_ANDROID` e `VITE_ADMOB_INTERSTITIAL_IOS` (arquivo `.env` antes do `npm run cap:sync`).
+- **Site (Amplify):** mostra um anúncio de exemplo próprio (`src/components/Interstitial.tsx`), com botão de fechar liberado após 5 s.
+
 ## Apps Android / iPhone (depois)
 
 ```bash
