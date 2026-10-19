@@ -37,7 +37,7 @@ export default function HowTo({ onBack, onPlay }: Props) {
           <b>Erros custam caro.</b> Sair do caminho soma <b>+2s</b>. Volte à casa acesa para continuar.
         </li>
         <li>
-          <b>5 percursos</b>, cerca de 45 segundos. Menor tempo vence.
+          <b>10 níveis</b>, cada um mais difícil, em cerca de 2 minutos. Menor tempo vence.
         </li>
         <li>
           <b>Desafie amigos:</b> compartilhe seu resultado, eles correm contra o seu <b>fantasma 👻</b> e vocês assistem aos dois

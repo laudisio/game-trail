@@ -22,7 +22,7 @@ export default function Result({ run, ghost, daily, onReplay, onAgain, onHome }:
   const summary = [
     errors > 0 && `${errors} ${errors === 1 ? 'erro' : 'erros'} (+${(errors * ERROR_PENALTY_MS) / 1000}s)`,
     timeouts > 0 &&
-      `${timeouts} ${timeouts === 1 ? 'percurso esgotado' : 'percursos esgotados'} (+${(timeouts * TIMEOUT_PENALTY_MS) / 1000}s)`,
+      `${timeouts} ${timeouts === 1 ? 'nível esgotado' : 'níveis esgotados'} (+${(timeouts * TIMEOUT_PENALTY_MS) / 1000}s)`,
   ].filter(Boolean);
   const ghostTotal = ghost ? totalScore(ghost.rounds) : 0;
   const diff = ghost ? ghostTotal - total : 0;
@@ -66,7 +66,7 @@ export default function Result({ run, ghost, daily, onReplay, onAgain, onHome }:
       <table className="breakdown">
         <thead>
           <tr>
-            <th>Percurso</th>
+            <th>Nível</th>
             <th>Tempo</th>
             <th>Erros</th>
             {ghost && <th>👻</th>}

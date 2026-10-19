@@ -1,7 +1,7 @@
 import { mulberry32, randInt, shuffle, type Rng } from './rng';
 import type { Level, PathStep } from './types';
 
-export const ROUNDS = 5;
+export const ROUNDS = 10;
 
 interface LevelConfig {
   size: number;
@@ -12,12 +12,19 @@ interface LevelConfig {
   previewMs: number;
 }
 
-const CONFIGS: LevelConfig[] = [
-  { size: 5, len: [6, 7], rotations: 0, portal: false, hintRatio: 0.35, previewMs: 2000 },
-  { size: 5, len: [7, 8], rotations: 1, portal: false, hintRatio: 0.2, previewMs: 2200 },
-  { size: 6, len: [8, 9], rotations: 0, portal: true, hintRatio: 0.15, previewMs: 2200 },
-  { size: 6, len: [9, 10], rotations: 1, portal: true, hintRatio: 0, previewMs: 2400 },
-  { size: 7, len: [10, 12], rotations: 2, portal: true, hintRatio: 0, previewMs: 2600 },
+// One entry per level, each harder than the last (bigger board, longer path,
+// more specials, fewer hints, less preview time per cell).
+export const CONFIGS: LevelConfig[] = [
+  { size: 5, len: [5, 6], rotations: 0, portal: false, hintRatio: 0.4, previewMs: 1800 },
+  { size: 5, len: [6, 7], rotations: 0, portal: false, hintRatio: 0.3, previewMs: 2000 },
+  { size: 5, len: [7, 8], rotations: 1, portal: false, hintRatio: 0.2, previewMs: 2000 },
+  { size: 6, len: [8, 9], rotations: 0, portal: true, hintRatio: 0.2, previewMs: 2200 },
+  { size: 6, len: [9, 10], rotations: 1, portal: true, hintRatio: 0.1, previewMs: 2200 },
+  { size: 6, len: [10, 11], rotations: 1, portal: true, hintRatio: 0, previewMs: 2300 },
+  { size: 7, len: [10, 12], rotations: 2, portal: true, hintRatio: 0, previewMs: 2400 },
+  { size: 7, len: [12, 13], rotations: 2, portal: true, hintRatio: 0, previewMs: 2400 },
+  { size: 8, len: [13, 14], rotations: 2, portal: true, hintRatio: 0, previewMs: 2500 },
+  { size: 8, len: [14, 16], rotations: 3, portal: true, hintRatio: 0, previewMs: 2600 },
 ];
 
 type Pos = { r: number; c: number };

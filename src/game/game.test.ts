@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { generateMatch } from './levels';
+import { CONFIGS, ROUNDS, generateMatch } from './levels';
 import { RoundEngine, replayAt, totalScore } from './engine';
 import { decodeRun, encodeRun, extractCode } from './codec';
 
@@ -10,6 +10,18 @@ describe('levels', () => {
   it('is deterministic per seed', () => {
     expect(generateMatch(42)).toEqual(generateMatch(42));
     expect(generateMatch(42)).not.toEqual(generateMatch(43));
+  });
+
+  it('has 10 levels that never get easier', () => {
+    expect(ROUNDS).toBe(10);
+    expect(CONFIGS).toHaveLength(ROUNDS);
+    for (let i = 1; i < CONFIGS.length; i++) {
+      const [a, b] = [CONFIGS[i - 1], CONFIGS[i]];
+      expect(b.size).toBeGreaterThanOrEqual(a.size);
+      expect(b.len[0]).toBeGreaterThanOrEqual(a.len[0]);
+      expect(b.hintRatio).toBeLessThanOrEqual(a.hintRatio);
+      expect(b.previewMs / b.len[1]).toBeLessThanOrEqual(a.previewMs / a.len[1]);
+    }
   });
 
   it('builds valid routes for many seeds', () => {
@@ -24,8 +36,11 @@ describe('levels', () => {
           if (p[j].special === 'portalOut') expect(p[j - 1].special).toBe('portalIn');
           else expect(adjacent(p[j - 1], p[j])).toBe(true);
         }
-        if (i >= 2) expect(p.some((s) => s.special === 'portalIn')).toBe(true);
-        if (i === 1 || i === 3) expect(p.some((s) => s.special?.startsWith('rotate'))).toBe(true);
+        const cfg = CONFIGS[i];
+        expect(p.length).toBeGreaterThanOrEqual(cfg.len[0]);
+        expect(p.length).toBeLessThanOrEqual(cfg.len[1]);
+        expect(p.some((s) => s.special === 'portalIn')).toBe(cfg.portal);
+        if (cfg.rotations > 0) expect(p.some((s) => s.special?.startsWith('rotate'))).toBe(true);
         expect(p.every((s) => s.r >= 0 && s.c >= 0 && s.r < lv.size && s.c < lv.size)).toBe(true);
       });
     }

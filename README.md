@@ -4,8 +4,8 @@
 
 - **↻ / ↺ Giro:** ao pisar, o tabuleiro gira 90°. Antecipe como continuar depois da rotação.
 - **◉ → ◎ Portal:** ao pisar, você é transportado para outro ponto do tabuleiro.
-- **Partida:** 5 percursos (~45 s). Pontuação = tempo + 2 s por erro (+5 s se o tempo de 20 s de um percurso esgotar).
-- **Desafio do dia:** mesmos 5 percursos para todo mundo no dia.
+- **Partida:** 10 níveis, cada um mais difícil (~2 min). Pontuação = tempo + 2 s por erro (+5 s se o tempo de 20 s de um percurso esgotar).
+- **Desafio do dia:** mesmos 10 níveis para todo mundo no dia.
 - **Fantasma:** compartilhe o resultado; o amigo corre contra o seu fantasma (mesmos percursos) e vocês assistem aos dois rastros lado a lado, vendo quem errou ou hesitou primeiro.
 
 ## Stack

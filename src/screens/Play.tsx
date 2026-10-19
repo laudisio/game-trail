@@ -193,7 +193,7 @@ export default function Play({ seed, name, ghost, onFinish, onQuit }: Props) {
 
       <div className="hud-sub">
         <span>
-          Percurso <b>{round + 1}</b>/{ROUNDS}
+          Nível <b>{round + 1}</b>/{ROUNDS}
         </span>
         <span className={eng.errors ? 'bad' : ''}>✖ {eng.errors}</span>
         {ghost && (
@@ -206,7 +206,7 @@ export default function Play({ seed, name, ghost, onFinish, onQuit }: Props) {
       <div className="board-wrap">
         {phase === 'intro' && (
           <div className="intro-splash" key={`intro-${round}`}>
-            <small>Percurso</small>
+            <small>Nível</small>
             <strong>{round + 1}</strong>
           </div>
         )}
