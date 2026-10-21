@@ -14,7 +14,7 @@ interface Props {
 const TAIL_MS = 900;
 
 function describe(m: Moment | null) {
-  return m ? `percurso ${m.round + 1}, ${fmtShort(m.t)}` : '';
+  return m ? `nível ${m.round + 1}, ${fmtShort(m.t)}` : '';
 }
 
 export default function Replay({ a, b, onBack }: Props) {
