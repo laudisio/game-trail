@@ -13,10 +13,19 @@ const TEST_UNITS = {
   android: 'ca-app-pub-3940256099942544/1033173712',
   ios: 'ca-app-pub-3940256099942544/4411468910',
 };
-const UNITS = {
-  android: (import.meta.env.VITE_ADMOB_INTERSTITIAL_ANDROID as string | undefined) || TEST_UNITS.android,
-  ios: (import.meta.env.VITE_ADMOB_INTERSTITIAL_IOS as string | undefined) || TEST_UNITS.ios,
+// Rastro's real AdMob interstitial units.
+const PROD_UNITS = {
+  android: 'ca-app-pub-9066518183306663/1995500061',
+  ios: 'ca-app-pub-9066518183306663/8121924714',
 };
+/** `VITE_ADMOB_TEST=true` forces Google's test ads (e.g. while testing on your own phone). */
+const FORCE_TEST = import.meta.env.VITE_ADMOB_TEST === 'true';
+const UNITS = FORCE_TEST
+  ? TEST_UNITS
+  : {
+      android: (import.meta.env.VITE_ADMOB_INTERSTITIAL_ANDROID as string | undefined) || PROD_UNITS.android,
+      ios: (import.meta.env.VITE_ADMOB_INTERSTITIAL_IOS as string | undefined) || PROD_UNITS.ios,
+    };
 
 export function isAdTurn(finishedMatches: number): boolean {
   return finishedMatches > 0 && finishedMatches % ADS_EVERY === 0;
@@ -65,9 +74,28 @@ class AdMobService implements AdService {
     this.started ??= (async () => {
       const { AdMob } = await import('@capacitor-community/admob');
       await AdMob.initialize();
+      await this.requestConsent();
       await this.preload();
     })().catch(() => {});
     return this.started;
+  }
+
+  /** Google UMP consent form (EEA/UK) first, then the iOS App Tracking Transparency prompt. */
+  private async requestConsent() {
+    const { AdMob, AdmobConsentStatus } = await import('@capacitor-community/admob');
+    try {
+      const info = await AdMob.requestConsentInfo();
+      if (info.isConsentFormAvailable && info.status === AdmobConsentStatus.REQUIRED) await AdMob.showConsentForm();
+    } catch {
+      /* no consent message configured or offline: ads fall back to Google's defaults */
+    }
+    if (Capacitor.getPlatform() !== 'ios') return;
+    try {
+      const { status } = await AdMob.trackingAuthorizationStatus();
+      if (status === 'notDetermined') await AdMob.requestTrackingAuthorization();
+    } catch {
+      /* iOS < 14 */
+    }
   }
 
   private async preload() {

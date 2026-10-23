@@ -38,9 +38,12 @@ O arquivo `amplify.yml` já está pronto (build com `npm ci && npm run build`, p
 
 Depois de cada 3ª partida concluída (3, 6, 9…) aparece um anúncio de tela cheia antes do resultado (`src/services/ads.ts`).
 
-- **App Android/iPhone:** usa o Google AdMob (`@capacitor-community/admob`). Hoje está com os **IDs de teste do Google**. Para anúncios reais, crie o app no [AdMob](https://admob.google.com) e troque:
-  - o *App ID* em `android/app/src/main/AndroidManifest.xml` e `ios/App/App/Info.plist` (`GADApplicationIdentifier`);
-  - o bloco intersticial nas variáveis `VITE_ADMOB_INTERSTITIAL_ANDROID` e `VITE_ADMOB_INTERSTITIAL_IOS` (arquivo `.env` antes do `npm run cap:sync`).
+- **App Android/iPhone:** usa o Google AdMob (`@capacitor-community/admob`) com os **IDs reais do Rastro**:
+  - *App ID* em `android/app/src/main/AndroidManifest.xml` e `ios/App/App/Info.plist` (`GADApplicationIdentifier`);
+  - blocos intersticiais em `PROD_UNITS` (`src/services/ads.ts`). As variáveis `VITE_ADMOB_INTERSTITIAL_ANDROID` / `VITE_ADMOB_INTERSTITIAL_IOS` sobrescrevem, se precisar.
+  - Ao abrir o app, aparece a tela de consentimento do Google (só para quem precisa, ex.: Europa) e, no iPhone, o pedido de "permitir rastreamento" (`NSUserTrackingUsageDescription`).
+  - **Para testar no seu celular sem risco de bloqueio da conta:** cadastre o aparelho em AdMob → Configurações → *Dispositivos de teste*, ou gere o app com `VITE_ADMOB_TEST=true` no `.env` (força anúncios de teste). Nunca clique nos seus anúncios reais.
+  - `public/app-ads.txt` já está publicado no site para a verificação do AdMob.
 - **Site (Amplify):** mostra um anúncio de exemplo próprio (`src/components/Interstitial.tsx`), com botão de fechar liberado após 5 s.
 
 ## Apps Android / iPhone (depois)
