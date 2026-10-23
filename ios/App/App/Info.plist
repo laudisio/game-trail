@@ -44,7 +44,9 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<string>ca-app-pub-9066518183306663~3800158444</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Usamos esse identificador para mostrar anúncios mais relevantes para você.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
